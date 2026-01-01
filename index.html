@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Compot</title>
+  <title>Compot – Community Competitions</title>
 
   <style>
     :root {
@@ -11,8 +11,8 @@
       --bg-card: #16161d;
       --border-soft: rgba(255,255,255,0.06);
       --purple: #8b5cf6;
-      --purple-soft: rgba(139,92,246,0.15);
       --purple-hover: #7c3aed;
+      --purple-soft: rgba(139,92,246,0.15);
       --text-main: #f4f4f5;
       --text-muted: #a1a1aa;
     }
@@ -21,7 +21,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     body {
@@ -31,24 +31,31 @@
       min-height: 100vh;
     }
 
+    /* Header */
     header {
       padding: 1.4rem 1.8rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border-soft);
+      backdrop-filter: blur(8px);
     }
 
     header h1 {
       font-size: 1.7rem;
       font-weight: 700;
-      letter-spacing: 0.4px;
       background: linear-gradient(90deg, #a78bfa, #8b5cf6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      letter-spacing: 0.4px;
     }
 
+    header nav {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Main */
     main {
       max-width: 1200px;
       margin: auto;
@@ -56,34 +63,32 @@
     }
 
     .section-title {
-      font-size: 1.3rem;
-      margin-bottom: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 600;
+      margin-bottom: 1.6rem;
     }
 
+    /* Grid */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
       gap: 1.6rem;
     }
 
+    /* Tile */
     .tile {
       position: relative;
-      background: linear-gradient(
-        180deg,
-        #1b1b24,
-        var(--bg-card)
-      );
+      background: linear-gradient(180deg, #1b1b24, var(--bg-card));
       border-radius: 20px;
       padding: 1.6rem;
       border: 1px solid var(--border-soft);
       display: flex;
       flex-direction: column;
       gap: 0.9rem;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
       box-shadow:
         0 0 0 1px rgba(139,92,246,0.05),
         0 20px 40px rgba(0,0,0,0.55);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
     .tile::before {
@@ -96,7 +101,6 @@
         var(--purple-soft),
         transparent 70%
       );
-      opacity: 0.8;
       pointer-events: none;
     }
 
@@ -109,7 +113,7 @@
 
     .badge {
       align-self: flex-start;
-      padding: 0.35rem 0.7rem;
+      padding: 0.35rem 0.75rem;
       border-radius: 999px;
       font-size: 0.75rem;
       font-weight: 600;
@@ -118,7 +122,7 @@
     }
 
     .prize {
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       font-weight: 800;
       letter-spacing: -0.5px;
     }
@@ -156,36 +160,29 @@
       display: block;
       height: 100%;
       width: 65%;
-      background: linear-gradient(
-        90deg,
-        #a78bfa,
-        #8b5cf6
-      );
+      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
     }
 
-    button {
+    .btn {
       margin-top: auto;
       padding: 0.85rem;
       border-radius: 14px;
-      border: none;
-      background: linear-gradient(
-        90deg,
-        #8b5cf6,
-        #7c3aed
-      );
+      text-align: center;
+      text-decoration: none;
+      background: linear-gradient(90deg, #8b5cf6, #7c3aed);
       color: white;
       font-weight: 700;
       font-size: 0.95rem;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
       box-shadow: 0 10px 25px rgba(139,92,246,0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
-    button:hover {
+    .btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 15px 35px rgba(139,92,246,0.45);
     }
 
+    /* Footer */
     footer {
       text-align: center;
       padding: 3rem 1rem;
@@ -198,6 +195,7 @@
 
 <header>
   <h1>Compot</h1>
+  <nav>Live Competitions</nav>
 </header>
 
 <main>
@@ -224,7 +222,7 @@
         <span>650 / 1000 tickets sold</span>
       </div>
 
-      <button>View Competition</button>
+      <a href="competition.html" class="btn">View Competition</a>
     </div>
 
     <div class="tile">
@@ -246,14 +244,36 @@
         <span>410 / 500 tickets sold</span>
       </div>
 
-      <button>View Competition</button>
+      <a href="competition.html" class="btn">View Competition</a>
+    </div>
+
+    <div class="tile">
+      <div class="badge">£1 PER TICKET</div>
+      <div class="prize">£250 Cash</div>
+      <div class="title">Flash Draw</div>
+      <p class="desc">
+        Limited tickets and a same-day draw.
+      </p>
+
+      <div class="stats">
+        <span>🎯 Odds: 1 in 250</span>
+        <span>⏳ Ends today</span>
+
+        <div class="progress">
+          <span style="width: 92%;"></span>
+        </div>
+
+        <span>230 / 250 tickets sold</span>
+      </div>
+
+      <a href="competition.html" class="btn">View Competition</a>
     </div>
 
   </div>
 </main>
 
 <footer>
-  © 2026 Compot · Fair, Transparent Community Draws
+  © 2026 Compot · Fair, Transparent Community Competitions
 </footer>
 
 </body>

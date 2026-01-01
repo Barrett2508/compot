@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Compot</title>
+
+  <style>
+    :root {
+      --bg: #0b0b10;
+      --card: #16161d;
+      --border: #23232d;
+      --purple: #8b5cf6;
+      --purple-hover: #7c3aed;
+      --text: #f1f1f1;
+      --muted: #a1a1aa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      color: var(--purple);
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+    }
+
+    header nav {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.4rem;
+    }
+
+    .tile {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      transition: transform 0.2s ease, border 0.2s ease;
+    }
+
+    .tile:hover {
+      transform: translateY(-4px);
+      border-color: var(--purple);
+    }
+
+    .prize {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--purple);
+    }
+
+    .title {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .stats {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .progress {
+      width: 100%;
+      height: 6px;
+      background: #0f0f15;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 0.4rem;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 65%;
+      background: var(--purple);
+    }
+
+    button {
+      margin-top: auto;
+      padding: 0.75rem;
+      border-radius: 12px;
+      border: none;
+      background: var(--purple);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: var(--purple-hover);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Compot</h1>
+  <nav>Live Draws</nav>
+</header>
+
+<main>
+  <h2 class="section-title">Live Competitions</h2>
+
+  <div class="grid">
+
+    <div class="tile">
+      <div class="prize">£1,000 Cash</div>
+      <div class="title">Weekly Community Draw</div>
+      <p class="desc">
+        Buy a ticket for your chance to win the full cash pot.
+      </p>
+
+      <div class="stats">
+        <span>🎫 £5 per ticket</span>
+        <span>🎯 Odds: 1 in 1000</span>
+        <span>⏳ Ends in 3 days</span>
+
+        <div class="progress">
+          <span></span>
+        </div>
+
+        <span>650 / 1000 tickets sold</span>
+      </div>
+
+      <button>View Competition</button>
+    </div>
+
+    <div class="tile">
+      <div class="prize">£500 Cash</div>
+      <div class="title">Midweek Quick Draw</div>
+      <p class="desc">
+        Smaller pot, faster draw, limited tickets available.
+      </p>
+
+      <div class="stats">
+        <span>🎫 £2 per ticket</span>
+        <span>🎯 Odds: 1 in 500</span>
+        <span>⏳ Ends tomorrow</span>
+
+        <div class="progress">
+          <span style="width: 82%;"></span>
+        </div>
+
+        <span>410 / 500 tickets sold</span>
+      </div>
+
+      <button>View Competition</button>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  © 2026 Compot · Community Ticket Competitions
+</footer>
+
+</body>
+</html>

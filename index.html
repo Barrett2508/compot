@@ -41,18 +41,44 @@
       backdrop-filter: blur(8px);
     }
 
-    header h1 {
+    .logo {
       font-size: 1.7rem;
       font-weight: 700;
       background: linear-gradient(90deg, #a78bfa, #8b5cf6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: 0.4px;
+      text-decoration: none;
     }
 
-    header nav {
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .balance {
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(139,92,246,0.15);
+      color: #c4b5fd;
+      border: 1px solid rgba(139,92,246,0.25);
+    }
+
+    .account-link {
+      text-decoration: none;
       font-size: 0.9rem;
-      color: var(--text-muted);
+      font-weight: 600;
+      color: var(--text-main);
+      padding: 0.45rem 0.75rem;
+      border-radius: 10px;
+      transition: background 0.15s ease;
+    }
+
+    .account-link:hover {
+      background: rgba(255,255,255,0.05);
     }
 
     /* Main */
@@ -194,8 +220,12 @@
 <body>
 
 <header>
-  <h1>Compot</h1>
-  <nav>Live Competitions</nav>
+  <a href="index.html" class="logo">Compot</a>
+
+  <div class="nav-right">
+    <div class="balance">£125.00</div>
+    <a href="account.html" class="account-link">Account</a>
+  </div>
 </header>
 
 <main>
@@ -242,28 +272,6 @@
         </div>
 
         <span>410 / 500 tickets sold</span>
-      </div>
-
-      <a href="competition.html" class="btn">View Competition</a>
-    </div>
-
-    <div class="tile">
-      <div class="badge">£1 PER TICKET</div>
-      <div class="prize">£250 Cash</div>
-      <div class="title">Flash Draw</div>
-      <p class="desc">
-        Limited tickets and a same-day draw.
-      </p>
-
-      <div class="stats">
-        <span>🎯 Odds: 1 in 250</span>
-        <span>⏳ Ends today</span>
-
-        <div class="progress">
-          <span style="width: 92%;"></span>
-        </div>
-
-        <span>230 / 250 tickets sold</span>
       </div>
 
       <a href="competition.html" class="btn">View Competition</a>

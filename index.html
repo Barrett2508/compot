@@ -7,13 +7,14 @@
 
   <style>
     :root {
-      --bg: #0b0b10;
-      --card: #16161d;
-      --border: #23232d;
+      --bg-main: #0b0b10;
+      --bg-card: #16161d;
+      --border-soft: rgba(255,255,255,0.06);
       --purple: #8b5cf6;
+      --purple-soft: rgba(139,92,246,0.15);
       --purple-hover: #7c3aed;
-      --text: #f1f1f1;
-      --muted: #a1a1aa;
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
     }
 
     * {
@@ -24,125 +25,172 @@
     }
 
     body {
-      background: var(--bg);
-      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at top, #14141c, var(--bg-main));
+      color: var(--text-main);
+      min-height: 100vh;
     }
 
     header {
-      padding: 1.2rem 1.5rem;
-      border-bottom: 1px solid var(--border);
+      padding: 1.4rem 1.8rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-soft);
     }
 
     header h1 {
-      color: var(--purple);
-      font-size: 1.6rem;
-      letter-spacing: 0.5px;
-    }
-
-    header nav {
-      color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     main {
       max-width: 1200px;
       margin: auto;
-      padding: 1.5rem;
+      padding: 2rem 1.5rem;
     }
 
     .section-title {
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      margin-bottom: 1.4rem;
+      font-weight: 600;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.4rem;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.6rem;
     }
 
     .tile {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 1.3rem;
+      position: relative;
+      background: linear-gradient(
+        180deg,
+        #1b1b24,
+        var(--bg-card)
+      );
+      border-radius: 20px;
+      padding: 1.6rem;
+      border: 1px solid var(--border-soft);
       display: flex;
       flex-direction: column;
-      gap: 0.8rem;
-      transition: transform 0.2s ease, border 0.2s ease;
+      gap: 0.9rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow:
+        0 0 0 1px rgba(139,92,246,0.05),
+        0 20px 40px rgba(0,0,0,0.55);
+    }
+
+    .tile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: radial-gradient(
+        400px 120px at top,
+        var(--purple-soft),
+        transparent 70%
+      );
+      opacity: 0.8;
+      pointer-events: none;
     }
 
     .tile:hover {
-      transform: translateY(-4px);
-      border-color: var(--purple);
+      transform: translateY(-6px);
+      box-shadow:
+        0 0 0 1px rgba(139,92,246,0.18),
+        0 30px 60px rgba(0,0,0,0.75);
+    }
+
+    .badge {
+      align-self: flex-start;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(139,92,246,0.15);
+      color: #c4b5fd;
     }
 
     .prize {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--purple);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
 
     .title {
       font-size: 1.05rem;
       font-weight: 600;
+      color: #e5e7eb;
     }
 
     .desc {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.4;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.5;
     }
 
     .stats {
-      margin-top: 0.5rem;
       font-size: 0.85rem;
-      color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
+      color: var(--text-muted);
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
     }
 
     .progress {
       width: 100%;
-      height: 6px;
-      background: #0f0f15;
-      border-radius: 6px;
+      height: 7px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 999px;
       overflow: hidden;
-      margin-top: 0.4rem;
+      margin-top: 0.3rem;
     }
 
     .progress span {
       display: block;
       height: 100%;
       width: 65%;
-      background: var(--purple);
+      background: linear-gradient(
+        90deg,
+        #a78bfa,
+        #8b5cf6
+      );
     }
 
     button {
       margin-top: auto;
-      padding: 0.75rem;
-      border-radius: 12px;
+      padding: 0.85rem;
+      border-radius: 14px;
       border: none;
-      background: var(--purple);
+      background: linear-gradient(
+        90deg,
+        #8b5cf6,
+        #7c3aed
+      );
       color: white;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 0.95rem;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 10px 25px rgba(139,92,246,0.35);
     }
 
     button:hover {
-      background: var(--purple-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(139,92,246,0.45);
     }
 
     footer {
       text-align: center;
-      padding: 2rem 1rem;
+      padding: 3rem 1rem;
       font-size: 0.8rem;
-      color: var(--muted);
+      color: var(--text-muted);
     }
   </style>
 </head>
@@ -150,7 +198,6 @@
 
 <header>
   <h1>Compot</h1>
-  <nav>Live Draws</nav>
 </header>
 
 <main>
@@ -159,14 +206,14 @@
   <div class="grid">
 
     <div class="tile">
+      <div class="badge">£5 PER TICKET</div>
       <div class="prize">£1,000 Cash</div>
       <div class="title">Weekly Community Draw</div>
       <p class="desc">
-        Buy a ticket for your chance to win the full cash pot.
+        Transparent odds, capped tickets, and a guaranteed draw.
       </p>
 
       <div class="stats">
-        <span>🎫 £5 per ticket</span>
         <span>🎯 Odds: 1 in 1000</span>
         <span>⏳ Ends in 3 days</span>
 
@@ -181,14 +228,14 @@
     </div>
 
     <div class="tile">
+      <div class="badge">£2 PER TICKET</div>
       <div class="prize">£500 Cash</div>
       <div class="title">Midweek Quick Draw</div>
       <p class="desc">
-        Smaller pot, faster draw, limited tickets available.
+        Faster draw with limited availability.
       </p>
 
       <div class="stats">
-        <span>🎫 £2 per ticket</span>
         <span>🎯 Odds: 1 in 500</span>
         <span>⏳ Ends tomorrow</span>
 
@@ -206,7 +253,7 @@
 </main>
 
 <footer>
-  © 2026 Compot · Community Ticket Competitions
+  © 2026 Compot · Fair, Transparent Community Draws
 </footer>
 
 </body>

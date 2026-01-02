@@ -1,59 +1,68 @@
-// app.js (fixed)
+// app.js (instant win fixes: win recognition + snap at 75% + wheel labels)
 const STORE_KEY = "compot_data_v1";
 
 const defaultData = {
   user: { name: "John Smith", email: "john@example.com" },
   balance: 125.0,
   nextTicketNo: 1500,
-  tickets: [
-    { compId: "weekly-1000", compName: "Weekly Community Draw", status: "Live", ticketRange: "#1023–1027", qty: 5 },
-    { compId: "midweek-500", compName: "Midweek Quick Draw", status: "Live", ticketRange: "#1201–1202", qty: 2 }
-  ],
-  transactions: [
-    { date: "12 Jan 2026", desc: "Flash Draw – Winnings", amount: 250 },
-    { date: "10 Jan 2026", desc: "Weekly Draw Tickets", amount: -25 }
-  ],
+  tickets: [],
+  transactions: [],
   competitions: {
-    "weekly-1000": { sold: 650, cap: 1000, price: 5, odds: "1 in 1000", ends: "Ends in 3 days" },
-    "midweek-500": { sold: 410, cap: 500, price: 2, odds: "1 in 500", ends: "Ends tomorrow" }
+    "weekly-1000": {
+      id: "weekly-1000",
+      title: "Weekly Community Draw",
+      prize: "£1,000 Cash",
+      desc: "Transparent odds, capped tickets, and a guaranteed draw.",
+      badge: "LIVE DRAW",
+      sold: 650,
+      cap: 1000,
+      price: 5,
+      odds: "1 in 1000",
+      ends: "Ends in 3 days"
+    },
+    "midweek-500": {
+      id: "midweek-500",
+      title: "Midweek Quick Draw",
+      prize: "£500 Cash",
+      desc: "Faster draw with limited availability.",
+      badge: "LIVE DRAW",
+      sold: 410,
+      cap: 500,
+      price: 2,
+      odds: "1 in 500",
+      ends: "Ends tomorrow"
+    }
   }
 };
 
-function deepClone(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
+const WIN_CHANCE = 0.10; // 1 in 10
+
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 
 function loadData() {
   const raw = localStorage.getItem(STORE_KEY);
-
   if (!raw) {
     const fresh = deepClone(defaultData);
     localStorage.setItem(STORE_KEY, JSON.stringify(fresh));
     return fresh;
   }
-
   try {
     const parsed = JSON.parse(raw);
-
-    // Ensure required keys exist (prevents crashes if storage is incomplete)
     if (!parsed.user) parsed.user = deepClone(defaultData.user);
     if (typeof parsed.balance !== "number") parsed.balance = defaultData.balance;
-    if (typeof parsed.nextTicketNo !== "number") parsed.nextTicketNo = defaultData.nextTicketNo;
     if (!Array.isArray(parsed.tickets)) parsed.tickets = [];
     if (!Array.isArray(parsed.transactions)) parsed.transactions = [];
     if (!parsed.competitions) parsed.competitions = deepClone(defaultData.competitions);
-
+    if (typeof parsed.nextTicketNo !== "number") parsed.nextTicketNo = defaultData.nextTicketNo;
     return parsed;
-  } catch (e) {
+  } catch {
     const fresh = deepClone(defaultData);
     localStorage.setItem(STORE_KEY, JSON.stringify(fresh));
     return fresh;
   }
 }
 
-function saveData(data) {
-  localStorage.setItem(STORE_KEY, JSON.stringify(data));
-}
+function saveData(data) { localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
 
 function formatGBP(n) {
   const num = Number(n) || 0;
@@ -75,10 +84,13 @@ function openModal(id) {
   const el = document.getElementById(id);
   if (el) el.classList.add("show");
 }
-
 function closeModal(id) {
   const el = document.getElementById(id);
   if (el) el.classList.remove("show");
+}
+
+function txDate() {
+  return new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }
 
 function addFunds(amount) {
@@ -87,115 +99,10 @@ function addFunds(amount) {
   if (add <= 0) return;
 
   data.balance = +(data.balance + add);
-
-  data.transactions.unshift({
-    date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-    desc: "Account Top-up",
-    amount: +add
-  });
+  data.transactions.unshift({ date: txDate(), desc: "Account Top-up", amount: +add });
 
   saveData(data);
   setAllBalances(data.balance);
-
-  const balEl = document.querySelector("[data-balance-amount]");
-  if (balEl) balEl.textContent = formatGBP(data.balance);
-}
-
-/* Helpers */
-function ticketRange(start, qty) {
-  const end = start + qty - 1;
-  return qty === 1 ? `#${start}` : `#${start}–${end}`;
-}
-
-function buyTickets({ compId, compName, pricePerTicket, qty }) {
-  const data = loadData();
-  const q = Number(qty) || 1;
-  const price = Number(pricePerTicket) || 0;
-  const total = price * q;
-
-  if (total <= 0) return false;
-
-  if (data.balance < total) {
-    alert("Not enough balance. Please add funds.");
-    return false;
-  }
-
-  // Deduct balance
-  data.balance = +(data.balance - total);
-
-  // Assign ticket numbers
-  const start = data.nextTicketNo;
-  data.nextTicketNo = start + q;
-
-  // Add ticket record
-  const range = ticketRange(start, q);
-  data.tickets.unshift({ compId, compName, status: "Live", ticketRange: range, qty: q });
-
-  // Competition sold counter (safe)
-  if (data.competitions && data.competitions[compId]) {
-    const c = data.competitions[compId];
-    c.sold = Math.min(c.cap, (Number(c.sold) || 0) + q);
-  }
-
-  // Transaction
-  data.transactions.unshift({
-    date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-    desc: `${compName} – Tickets (${q} × ${formatGBP(price)})`,
-    amount: -total
-  });
-
-  saveData(data);
-  setAllBalances(data.balance);
-
-  const balEl = document.querySelector("[data-balance-amount]");
-  if (balEl) balEl.textContent = formatGBP(data.balance);
-
-  return true;
-}
-
-/* Hydrators */
-function hydrateAccount() {
-  const data = loadData();
-
-  const nameEl = document.querySelector("[data-user-name]");
-  const emailEl = document.querySelector("[data-user-email]");
-  if (nameEl) nameEl.textContent = data.user.name;
-  if (emailEl) emailEl.textContent = data.user.email;
-
-  const balEl = document.querySelector("[data-balance-amount]");
-  if (balEl) balEl.textContent = formatGBP(data.balance);
-
-  const tbody = document.querySelector("[data-active-tickets-body]");
-  if (tbody) {
-    tbody.innerHTML = "";
-    const active = data.tickets.filter(t => t.status === "Live").slice(0, 8);
-    active.forEach(t => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${t.compName}</td>
-        <td>${t.qty}</td>
-        <td class="status">${t.status}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-}
-
-function hydrateTicketsPage() {
-  const data = loadData();
-  const tbody = document.querySelector("[data-tickets-body]");
-  if (!tbody) return;
-
-  tbody.innerHTML = "";
-  data.tickets.slice(0, 20).forEach(t => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${t.compName}</td>
-      <td>${t.ticketRange}</td>
-      <td class="status">${t.status}</td>
-    `;
-    tbody.appendChild(tr);
-  });
 }
 
 function hydrateTransactionsPage() {
@@ -204,7 +111,7 @@ function hydrateTransactionsPage() {
   if (!tbody) return;
 
   tbody.innerHTML = "";
-  data.transactions.slice(0, 30).forEach(tx => {
+  data.transactions.slice(0, 50).forEach(tx => {
     const sign = tx.amount >= 0 ? "+" : "-";
     const amt = Math.abs(Number(tx.amount) || 0);
     const tr = document.createElement("tr");
@@ -215,48 +122,6 @@ function hydrateTransactionsPage() {
     `;
     tbody.appendChild(tr);
   });
-}
-
-function hydrateIndexCompetitions() {
-  const data = loadData();
-
-  document.querySelectorAll("[data-comp-card]").forEach(card => {
-    const compId = card.getAttribute("data-comp-id");
-    const info = data.competitions && data.competitions[compId];
-    if (!info) return;
-
-    const soldEl = card.querySelector("[data-comp-sold]");
-    const capEl = card.querySelector("[data-comp-cap]");
-    const progEl = card.querySelector("[data-comp-progress]");
-
-    if (soldEl) soldEl.textContent = info.sold;
-    if (capEl) capEl.textContent = info.cap;
-    if (progEl) {
-      const pct = Math.round((info.sold / info.cap) * 100);
-      progEl.style.width = pct + "%";
-    }
-  });
-}
-
-function hydrateCompetitionDetail() {
-  const data = loadData();
-  const detail = document.querySelector("[data-comp-detail]");
-  if (!detail) return;
-
-  const compId = detail.getAttribute("data-comp-id");
-  const info = data.competitions && data.competitions[compId];
-  if (!info) return;
-
-  const soldEl = detail.querySelector("[data-detail-sold]");
-  const capEl = detail.querySelector("[data-detail-cap]");
-  const progEl = detail.querySelector("[data-detail-progress]");
-
-  if (soldEl) soldEl.textContent = info.sold;
-  if (capEl) capEl.textContent = info.cap;
-  if (progEl) {
-    const pct = Math.round((info.sold / info.cap) * 100);
-    progEl.style.width = pct + "%";
-  }
 }
 
 function initAddFundsUI() {
@@ -298,59 +163,399 @@ function initAddFundsUI() {
   }
 }
 
-function initCompetitionPurchase() {
-  const compRoot = document.querySelector("[data-competition]");
-  if (!compRoot) return;
+/* ------------------------------ */
+/* Instant Win helpers            */
+/* ------------------------------ */
+function canAfford(cost) {
+  const data = loadData();
+  return data.balance >= cost;
+}
 
-  const compId = compRoot.getAttribute("data-comp-id");
-  const compName = compRoot.getAttribute("data-comp-name");
-  const price = Number(compRoot.getAttribute("data-price"));
+function chargePlay(gameName, cost) {
+  const data = loadData();
+  if (data.balance < cost) return { ok: false };
 
-  let selectedQty = 1;
-
-  const qtyButtons = compRoot.querySelectorAll("[data-qty]");
-  const totalEl = compRoot.querySelector("[data-total]");
-  const buyBtn = compRoot.querySelector("[data-buy]");
-
-  function setActiveQty(q) {
-    selectedQty = q;
-    qtyButtons.forEach(b => b.classList.toggle("active", Number(b.getAttribute("data-qty")) === q));
-    if (totalEl) totalEl.textContent = formatGBP(price * selectedQty);
-  }
-
-  qtyButtons.forEach(btn => {
-    btn.addEventListener("click", () => setActiveQty(Number(btn.getAttribute("data-qty"))));
+  data.balance = +(data.balance - cost);
+  data.transactions.unshift({
+    date: txDate(),
+    desc: `Instant Win – ${gameName} (Play)`,
+    amount: -cost
   });
 
-  setActiveQty(1);
+  saveData(data);
+  setAllBalances(data.balance);
+  return { ok: true };
+}
 
-  if (buyBtn) {
-    buyBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const ok = buyTickets({ compId, compName, pricePerTicket: price, qty: selectedQty });
-      if (ok) {
-        alert(`Purchased ${selectedQty} ticket(s) for ${compName}.`);
-        hydrateTicketsPage();
+function payWin(gameName, prize) {
+  const data = loadData();
+  const p = Number(prize) || 0;
+  if (p <= 0) return;
+
+  data.balance = +(data.balance + p);
+  data.transactions.unshift({
+    date: txDate(),
+    desc: `Instant Win – ${gameName} (Win)`,
+    amount: +p
+  });
+
+  saveData(data);
+  setAllBalances(data.balance);
+}
+
+function pickPrizeWeighted(prizeWeights) {
+  const total = prizeWeights.reduce((a, x) => a + x.weight, 0);
+  let r = Math.random() * total;
+  for (const x of prizeWeights) {
+    r -= x.weight;
+    if (r <= 0) return x.prize;
+  }
+  return prizeWeights[prizeWeights.length - 1].prize;
+}
+
+/* Scratch canvas with snap-to-reveal at 75% */
+function setupScratchCanvas(canvas, onReveal) {
+  const ctx = canvas.getContext("2d");
+  let isDown = false;
+  let revealed = false;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+
+    // draw using CSS pixel coordinates
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "rgba(220,220,220,0.92)";
+    ctx.fillRect(0, 0, rect.width, rect.height);
+
+    ctx.fillStyle = "rgba(0,0,0,0.07)";
+    for (let y = 0; y < rect.height; y += 12) ctx.fillRect(0, y, rect.width, 1);
+
+    ctx.fillStyle = "rgba(0,0,0,0.35)";
+    ctx.font = "900 18px system-ui";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("SCRATCH", rect.width / 2, rect.height / 2);
+  }
+
+  function scratchAt(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x, y, 18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  function percentCleared() {
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let cleared = 0;
+    for (let i = 3; i < img.length; i += 4 * 16) {
+      if (img[i] === 0) cleared++;
+    }
+    const total = Math.floor(img.length / (4 * 16));
+    return total ? (cleared / total) : 0;
+  }
+
+  function snapReveal() {
+    if (revealed) return;
+    revealed = true;
+
+    // fully clear overlay
+    ctx.globalCompositeOperation = "source-over";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    canvas.style.display = "none";
+    onReveal?.();
+  }
+
+  function maybeReveal() {
+    if (revealed) return;
+    if (percentCleared() >= 0.75) snapReveal();
+  }
+
+  function pointerDown(e) {
+    isDown = true;
+    const p = (e.touches && e.touches[0]) ? e.touches[0] : e;
+    scratchAt(p.clientX, p.clientY);
+    maybeReveal();
+  }
+  function pointerMove(e) {
+    if (!isDown) return;
+    const p = (e.touches && e.touches[0]) ? e.touches[0] : e;
+    scratchAt(p.clientX, p.clientY);
+    maybeReveal();
+  }
+  function pointerUp() { isDown = false; }
+
+  function resetOverlay() {
+    revealed = false;
+    canvas.style.display = "block";
+    resize();
+  }
+
+  canvas.addEventListener("mousedown", pointerDown);
+  canvas.addEventListener("mousemove", pointerMove);
+  window.addEventListener("mouseup", pointerUp);
+
+  canvas.addEventListener("touchstart", (e) => { e.preventDefault(); pointerDown(e); }, { passive: false });
+  canvas.addEventListener("touchmove", (e) => { e.preventDefault(); pointerMove(e); }, { passive: false });
+  window.addEventListener("touchend", pointerUp);
+
+  window.addEventListener("resize", () => {
+    if (!revealed) resize();
+  });
+
+  resetOverlay();
+  return { resetOverlay, snapReveal };
+}
+
+/* ------------------------------ */
+/* Instant Win main               */
+/* ------------------------------ */
+function initInstantWin() {
+  const scratchPlay = document.querySelector("[data-scratch-play]");
+  const boxGrid = document.querySelector("[data-box-grid]");
+  const wheel = document.querySelector("[data-wheel]");
+  if (!scratchPlay && !boxGrid && !wheel) return;
+
+  // ---- Scratch Card ----
+  const scratchSlots = Array.from(document.querySelectorAll("[data-scratch-slot]"));
+  const scratchResult = document.querySelector("[data-scratch-result]");
+  const scratchReset = document.querySelector("[data-scratch-reset]");
+  const scratchCanvas = document.querySelector("[data-scratch-canvas]");
+
+  const scratchSymbols = ["🍒","🍋","🍇","⭐","💎","🎁"];
+  const scratchWinPrizes = [
+    { prize: 2,  weight: 45 },
+    { prize: 5,  weight: 28 },
+    { prize: 10, weight: 18 },
+    { prize: 25, weight: 7.5 },
+    { prize: 50, weight: 1.5 }
+  ];
+
+  let scratchArmed = false;
+  let scratchPendingPrize = 0;
+  let scratchOverlayCtrl = null;
+
+  function scratchResetUI() {
+    scratchArmed = false;
+    scratchPendingPrize = 0;
+    scratchSlots.forEach(s => s.textContent = "❔");
+    if (scratchCanvas) scratchCanvas.style.display = "block";
+    if (scratchResult) scratchResult.textContent = "Press “New Card” to start, then scratch to reveal.";
+  }
+
+  if (scratchCanvas) {
+    setTimeout(() => {
+      scratchOverlayCtrl = setupScratchCanvas(scratchCanvas, () => {
+        if (!scratchArmed) return;
+
+        // recognise win by 3 matching symbols
+        const symbols = scratchSlots.map(s => s.textContent);
+        const isWin = symbols.length === 3 && symbols[0] === symbols[1] && symbols[1] === symbols[2];
+
+        if (isWin && scratchPendingPrize > 0) {
+          payWin("Scratch Card", scratchPendingPrize);
+          if (scratchResult) scratchResult.textContent = `You won ${formatGBP(scratchPendingPrize)} 🎉`;
+        } else {
+          if (scratchResult) scratchResult.textContent = "Unlucky — no win this time.";
+        }
+
+        scratchArmed = false;
+        scratchPendingPrize = 0;
         hydrateTransactionsPage();
-        hydrateAccount();
-        hydrateIndexCompetitions();
-        hydrateCompetitionDetail();
-      }
+      });
+    }, 0);
+  }
+
+  if (scratchReset) {
+    scratchReset.addEventListener("click", () => {
+      scratchResetUI();
+      scratchOverlayCtrl?.resetOverlay();
     });
   }
+
+  if (scratchPlay) {
+    scratchPlay.addEventListener("click", () => {
+      const cost = 2;
+      if (!canAfford(cost)) return alert("Not enough balance. Please add funds.");
+
+      const charged = chargePlay("Scratch Card", cost);
+      if (!charged.ok) return alert("Could not start a new card.");
+
+      const isWin = Math.random() < WIN_CHANCE;
+      scratchPendingPrize = isWin ? pickPrizeWeighted(scratchWinPrizes) : 0;
+
+      if (scratchPendingPrize > 0) {
+        const sym = scratchSymbols[Math.floor(Math.random() * scratchSymbols.length)];
+        scratchSlots.forEach(s => s.textContent = sym);
+      } else {
+        let a = scratchSymbols[Math.floor(Math.random() * scratchSymbols.length)];
+        let b = scratchSymbols[Math.floor(Math.random() * scratchSymbols.length)];
+        let c = scratchSymbols[Math.floor(Math.random() * scratchSymbols.length)];
+        if (a === b && b === c) c = scratchSymbols[(scratchSymbols.indexOf(c) + 1) % scratchSymbols.length];
+        [a,b,c].forEach((v, idx) => scratchSlots[idx].textContent = v);
+      }
+
+      scratchArmed = true;
+      if (scratchResult) scratchResult.textContent = "Scratch the card to reveal…";
+      if (scratchCanvas) scratchCanvas.style.display = "block";
+      scratchOverlayCtrl?.resetOverlay();
+
+      hydrateTransactionsPage();
+    });
+  }
+
+  scratchResetUI();
+
+  // ---- Pick a Box ----
+  const boxResult = document.querySelector("[data-box-result]");
+  const boxReset = document.querySelector("[data-box-reset]");
+  let boxLocked = false;
+
+  const boxWinPrizes = [
+    { prize: 1,  weight: 42 },
+    { prize: 2,  weight: 28 },
+    { prize: 5,  weight: 18 },
+    { prize: 10, weight: 9.5 },
+    { prize: 25, weight: 2.5 }
+  ];
+
+  function resetBoxes() {
+    boxLocked = false;
+    document.querySelectorAll(".box").forEach(b => {
+      b.disabled = false;
+      b.textContent = "?";
+    });
+    if (boxResult) boxResult.textContent = "Pick a box to reveal your prize.";
+  }
+
+  if (boxReset) boxReset.addEventListener("click", resetBoxes);
+
+  if (boxGrid) {
+    boxGrid.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-box]");
+      if (!btn || boxLocked) return;
+
+      const cost = 1;
+      if (!canAfford(cost)) return alert("Not enough balance. Please add funds.");
+
+      const charged = chargePlay("Pick a Box", cost);
+      if (!charged.ok) return alert("Could not play.");
+
+      const isWin = Math.random() < WIN_CHANCE;
+      const prize = isWin ? pickPrizeWeighted(boxWinPrizes) : 0;
+
+      btn.textContent = prize > 0 ? `£${prize}` : "0";
+
+      boxLocked = true;
+      document.querySelectorAll(".box").forEach(b => b.disabled = true);
+
+      if (prize > 0) {
+        payWin("Pick a Box", prize);
+        if (boxResult) boxResult.textContent = `You won ${formatGBP(prize)} 🎉`;
+      } else {
+        if (boxResult) boxResult.textContent = "No win this time.";
+      }
+
+      hydrateTransactionsPage();
+    });
+  }
+
+  resetBoxes();
+
+  // ---- Spin the Wheel ----
+  const wheelSpin = document.querySelector("[data-wheel-spin]");
+  const wheelReset = document.querySelector("[data-wheel-reset]");
+  const wheelResult = document.querySelector("[data-wheel-result]");
+
+  let wheelBusy = false;
+  let wheelRotation = 0;
+
+  const wheelWinPrizes = [
+    { prize: 2,   weight: 34 },
+    { prize: 5,   weight: 26 },
+    { prize: 10,  weight: 20 },
+    { prize: 15,  weight: 12 },
+    { prize: 25,  weight: 6.5 },
+    { prize: 50,  weight: 1.4 },
+    { prize: 100, weight: 0.1 }
+  ];
+
+  const wheelSlices = [
+    { prize: 0,   label: "£0" },   // index 0
+    { prize: 2,   label: "£2" },
+    { prize: 5,   label: "£5" },
+    { prize: 10,  label: "£10" },
+    { prize: 15,  label: "£15" },
+    { prize: 25,  label: "£25" },
+    { prize: 50,  label: "£50" },
+    { prize: 100, label: "£100" }
+  ];
+
+  function spinResetUI() {
+    wheelBusy = false;
+    wheelRotation = 0;
+    if (wheel) wheel.style.transform = `rotate(0deg)`;
+    if (wheelResult) wheelResult.textContent = "Spin the wheel to win instantly.";
+  }
+
+  if (wheelReset) wheelReset.addEventListener("click", spinResetUI);
+
+  if (wheelSpin) {
+    wheelSpin.addEventListener("click", () => {
+      const cost = 2;
+      if (wheelBusy) return;
+      if (!canAfford(cost)) return alert("Not enough balance. Please add funds.");
+
+      const charged = chargePlay("Spin the Wheel", cost);
+      if (!charged.ok) return alert("Could not play.");
+
+      wheelBusy = true;
+      if (wheelResult) wheelResult.textContent = "Spinning...";
+
+      const isWin = Math.random() < WIN_CHANCE;
+      const prize = isWin ? pickPrizeWeighted(wheelWinPrizes) : 0;
+
+      const sliceIndex = wheelSlices.findIndex(s => s.prize === prize);
+      const safeIndex = sliceIndex >= 0 ? sliceIndex : 0;
+
+      const slice = 360 / 8;
+      const spins = 5 + Math.floor(Math.random() * 3);
+      const target = (spins * 360) + (safeIndex * slice) + (slice / 2);
+
+      wheelRotation += target;
+      if (wheel) wheel.style.transform = `rotate(${wheelRotation}deg)`;
+
+      setTimeout(() => {
+        if (prize > 0) {
+          payWin("Spin the Wheel", prize);
+          if (wheelResult) wheelResult.textContent = `You won ${formatGBP(prize)} 🎉`;
+        } else {
+          if (wheelResult) wheelResult.textContent = "No win this time.";
+        }
+
+        wheelBusy = false;
+        hydrateTransactionsPage();
+      }, 3250);
+    });
+  }
+
+  spinResetUI();
 }
 
 /* Boot */
 document.addEventListener("DOMContentLoaded", () => {
   initHeaderBalance();
   initAddFundsUI();
-
-  hydrateAccount();
-  hydrateTicketsPage();
   hydrateTransactionsPage();
-
-  hydrateIndexCompetitions();
-  hydrateCompetitionDetail();
-
-  initCompetitionPurchase();
+  initInstantWin();
 });

@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,14 +23,14 @@
   <div class="grid">
 
     <div class="tile" data-comp-card data-comp-id="weekly-1000">
-      <div class="badge">£5 PER TICKET</div>
-      <div class="prize">£1,000 Cash</div>
-      <div class="title">Weekly Community Draw</div>
-      <p class="desc">Transparent odds, capped tickets, and a guaranteed draw.</p>
+      <div class="badge">£<span data-comp-price>5</span> PER TICKET</div>
+      <div class="prize" data-comp-prize>£1,000 Cash</div>
+      <div class="title" data-comp-title>Weekly Community Draw</div>
+      <p class="desc" data-comp-desc>Transparent odds, capped tickets, and a guaranteed draw.</p>
 
       <div class="stats">
-        <span>🎯 Odds: 1 in 1000</span>
-        <span>⏳ Ends in 3 days</span>
+        <span>🎯 Odds: <span data-comp-odds>1 in 1000</span></span>
+        <span>⏳ <span data-comp-ends>Ends in 3 days</span></span>
 
         <div class="progress">
           <span data-comp-progress style="width:65%"></span>
@@ -40,18 +39,18 @@
         <span><span data-comp-sold>650</span> / <span data-comp-cap>1000</span> tickets sold</span>
       </div>
 
-      <a href="competition.html" class="btn">View Competition</a>
+      <a href="competition.html?id=weekly-1000" class="btn">View Competition</a>
     </div>
 
     <div class="tile" data-comp-card data-comp-id="midweek-500">
-      <div class="badge">£2 PER TICKET</div>
-      <div class="prize">£500 Cash</div>
-      <div class="title">Midweek Quick Draw</div>
-      <p class="desc">Faster draw with limited availability.</p>
+      <div class="badge">£<span data-comp-price>2</span> PER TICKET</div>
+      <div class="prize" data-comp-prize>£500 Cash</div>
+      <div class="title" data-comp-title>Midweek Quick Draw</div>
+      <p class="desc" data-comp-desc>Faster draw with limited availability.</p>
 
       <div class="stats">
-        <span>🎯 Odds: 1 in 500</span>
-        <span>⏳ Ends tomorrow</span>
+        <span>🎯 Odds: <span data-comp-odds>1 in 500</span></span>
+        <span>⏳ <span data-comp-ends>Ends tomorrow</span></span>
 
         <div class="progress">
           <span data-comp-progress style="width:82%"></span>
@@ -60,7 +59,25 @@
         <span><span data-comp-sold>410</span> / <span data-comp-cap>500</span> tickets sold</span>
       </div>
 
-      <a href="competition.html" class="btn">View Competition</a>
+      <a href="competition.html?id=midweek-500" class="btn">View Competition</a>
+    </div>
+
+    <!-- Instant Win tile -->
+    <div class="tile">
+      <div class="badge">INSTANT WIN</div>
+      <div class="prize">Play & Win Now</div>
+      <div class="title">Scratch • Pick a Box • Spin</div>
+      <p class="desc">
+        Quick games that pay out instantly into your Compot balance.
+      </p>
+
+      <div class="stats">
+        <span>⚡ Instant results</span>
+        <span>💳 Uses your Compot balance</span>
+        <span>🧾 Logged in transactions</span>
+      </div>
+
+      <a href="instant-win.html" class="btn">Play Instant Win</a>
     </div>
 
   </div>

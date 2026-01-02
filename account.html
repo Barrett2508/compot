@@ -1,218 +1,12 @@
+<!-- account.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Account – Compot</title>
-
-  <style>
-    :root {
-      --bg-main: #0b0b10;
-      --bg-card: #16161d;
-      --border-soft: rgba(255,255,255,0.06);
-      --purple: #8b5cf6;
-      --purple-hover: #7c3aed;
-      --purple-soft: rgba(139,92,246,0.15);
-      --text-main: #f4f4f5;
-      --text-muted: #a1a1aa;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    body {
-      background:
-        radial-gradient(1200px 600px at top, #14141c, var(--bg-main));
-      color: var(--text-main);
-      min-height: 100vh;
-    }
-
-    /* Header */
-    header {
-      padding: 1.4rem 1.8rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-soft);
-      backdrop-filter: blur(8px);
-    }
-
-    .logo {
-      font-size: 1.7rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.4px;
-      text-decoration: none;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-    }
-
-    .balance-pill {
-      padding: 0.4rem 0.8rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      background: rgba(139,92,246,0.15);
-      color: #c4b5fd;
-      border: 1px solid rgba(139,92,246,0.25);
-    }
-
-    .account-link {
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-main);
-      padding: 0.45rem 0.75rem;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.05);
-    }
-
-    /* Main layout */
-    main {
-      max-width: 1200px;
-      margin: auto;
-      padding: 2.2rem 1.5rem;
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Sidebar */
-    .sidebar {
-      background: linear-gradient(180deg, #1b1b24, var(--bg-card));
-      border: 1px solid var(--border-soft);
-      border-radius: 20px;
-      padding: 1.5rem;
-      height: fit-content;
-    }
-
-    .user {
-      margin-bottom: 1.5rem;
-    }
-
-    .user h2 {
-      font-size: 1.1rem;
-      margin-bottom: 0.2rem;
-    }
-
-    .user span {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .menu {
-      display: grid;
-      gap: 0.4rem;
-    }
-
-    .menu a {
-      text-decoration: none;
-      padding: 0.6rem 0.8rem;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      transition: background 0.15s ease;
-    }
-
-    .menu a.active,
-    .menu a:hover {
-      background: rgba(139,92,246,0.15);
-    }
-
-    /* Content */
-    .content {
-      display: grid;
-      gap: 1.8rem;
-    }
-
-    .card {
-      background: linear-gradient(180deg, #1b1b24, var(--bg-card));
-      border: 1px solid var(--border-soft);
-      border-radius: 20px;
-      padding: 1.6rem;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.55);
-    }
-
-    .card h3 {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    /* Balance */
-    .balance {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .balance-amount {
-      font-size: 2rem;
-      font-weight: 800;
-    }
-
-    .balance button {
-      padding: 0.7rem 1.2rem;
-      border-radius: 12px;
-      border: none;
-      background: linear-gradient(90deg, #8b5cf6, #7c3aed);
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(139,92,246,0.35);
-    }
-
-    /* Tables */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-    }
-
-    th, td {
-      padding: 0.75rem 0.5rem;
-      text-align: left;
-    }
-
-    th {
-      color: var(--text-muted);
-      font-weight: 600;
-      border-bottom: 1px solid var(--border-soft);
-    }
-
-    tr:not(:last-child) td {
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-
-    .status {
-      color: #c4b5fd;
-      font-weight: 600;
-    }
-
-    footer {
-      text-align: center;
-      padding: 3rem 1rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
 </head>
 <body>
 
@@ -220,37 +14,34 @@
   <a href="index.html" class="logo">Compot</a>
   <div class="nav-right">
     <div class="balance-pill">£125.00</div>
-    <a href="account.html" class="account-link">Account</a>
+    <a href="account.html" class="account-link active">Account</a>
   </div>
 </header>
 
-<main>
+<main class="account-layout">
 
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="user">
-      <h2>John Smith</h2>
-      <span>john@example.com</span>
+      <h2 data-user-name>John Smith</h2>
+      <span data-user-email>john@example.com</span>
     </div>
 
     <nav class="menu">
-      <a href="#" class="active">Overview</a>
-      <a href="#">My Tickets</a>
+      <a href="account.html" class="active">Overview</a>
+      <a href="tickets.html">My Tickets</a>
       <a href="#">Wins</a>
-      <a href="#">Transactions</a>
-      <a href="#">Settings</a>
-      <a href="#">Log out</a>
+      <a href="transactions.html">Transactions</a>
+      <a href="settings.html">Settings</a>
+      <a href="index.html">Log out</a>
     </nav>
   </aside>
 
-  <!-- Content -->
-  <section class="content">
-
+  <section class="content" style="display:grid; gap:1.8rem;">
     <div class="card">
       <h3>Balance</h3>
-      <div class="balance">
-        <div class="balance-amount">£125.00</div>
-        <button>Add Funds</button>
+      <div class="balance" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+        <div class="balance-amount" data-balance-amount style="font-size:2rem;font-weight:800;">£125.00</div>
+        <button class="btn" data-open-modal="addFundsModal" style="margin-top:0;">Add Funds</button>
       </div>
     </div>
 
@@ -264,17 +55,8 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Weekly Community Draw</td>
-            <td>5</td>
-            <td class="status">Live</td>
-          </tr>
-          <tr>
-            <td>Midweek Quick Draw</td>
-            <td>2</td>
-            <td class="status">Live</td>
-          </tr>
+        <tbody data-active-tickets-body>
+          <!-- Filled by app.js -->
         </tbody>
       </table>
     </div>
@@ -298,14 +80,33 @@
         </tbody>
       </table>
     </div>
-
   </section>
 
 </main>
 
-<footer>
-  © 2026 Compot · Secure Community Competitions
-</footer>
+<footer>© 2026 Compot · Secure Community Competitions</footer>
+
+<!-- Add Funds Modal -->
+<div class="modal-backdrop" id="addFundsModal">
+  <div class="modal card">
+    <h3>Add Funds</h3>
+    <p class="small-muted">Choose a quick top-up or enter a custom amount.</p>
+
+    <div class="row">
+      <button class="btn secondary" data-topup="10">+£10</button>
+      <button class="btn secondary" data-topup="25">+£25</button>
+      <button class="btn secondary" data-topup="50">+£50</button>
+    </div>
+
+    <label style="margin-top:1rem;">Custom amount</label>
+    <input type="number" min="1" step="1" placeholder="e.g. 15" data-topup-custom />
+
+    <div class="row">
+      <button class="btn" data-topup-custom-btn>Add</button>
+      <button class="btn secondary" data-close-modal="addFundsModal">Cancel</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

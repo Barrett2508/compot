@@ -1,10 +1,9 @@
-<!-- competition.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Community Draw – Compot</title>
+<title>Competition – Compot</title>
 <link rel="stylesheet" href="styles.css">
 <script defer src="app.js"></script>
 </head>
@@ -20,34 +19,32 @@
 
 <main class="detail-layout">
 
-<section class="card" data-comp-detail data-comp-id="weekly-1000">
-  <span class="badge">LIVE DRAW</span>
-  <h1 style="font-size:2.1rem;margin-top:.8rem;">£1,000 Cash</h1>
-  <h2 style="margin-top:.25rem;color:#e5e7eb;">Weekly Community Draw</h2>
-  <p style="margin-top:.9rem;color:var(--text-muted);line-height:1.6;">
-    Buy tickets for your chance to win. Tickets are capped and the draw
-    is guaranteed to take place at the end time.
+<section class="card" data-comp-detail>
+  <span class="badge" data-detail-badge>LIVE DRAW</span>
+
+  <h1 style="font-size:2.1rem;margin-top:.8rem;" data-detail-prize>£1,000 Cash</h1>
+  <h2 style="margin-top:.25rem;color:#e5e7eb;" data-detail-title>Weekly Community Draw</h2>
+
+  <p style="margin-top:.9rem;color:var(--text-muted);line-height:1.6;" data-detail-desc>
+    Buy tickets for your chance to win. Tickets are capped and the draw is guaranteed to take place at the end time.
   </p>
 
   <div class="meta">
-    <span>🎯 Odds: 1 in 1000</span>
-    <span>⏳ Ends in 3 days</span>
+    <span>🎯 Odds: <span data-detail-odds>1 in 1000</span></span>
+    <span>⏳ <span data-detail-ends>Ends in 3 days</span></span>
   </div>
 
   <div class="progress" style="margin-top:1rem;">
     <span data-detail-progress style="width:65%"></span>
   </div>
-  <small class="small-muted"><span data-detail-sold>650</span> / <span data-detail-cap>1000</span> tickets sold</small>
+  <small class="small-muted">
+    <span data-detail-sold>650</span> / <span data-detail-cap>1000</span> tickets sold
+  </small>
 </section>
 
-<aside class="card sticky"
-  data-competition
-  data-comp-id="weekly-1000"
-  data-comp-name="Weekly Community Draw"
-  data-price="5">
-
+<aside class="card sticky" data-competition>
   <h3>Enter Competition</h3>
-  <p class="price">£5 per ticket</p>
+  <p class="price">£<span data-buy-price>5</span> per ticket</p>
 
   <div class="qty">
     <button data-qty="1">1</button>
@@ -59,6 +56,8 @@
 
   <a class="btn" href="#" data-buy>Buy Tickets</a>
   <button class="btn secondary" style="margin-top:.8rem" data-open-modal="addFundsModal">Add Funds</button>
+
+  <p class="small-muted" style="margin-top:.9rem" data-soldout-note></p>
 </aside>
 
 </main>

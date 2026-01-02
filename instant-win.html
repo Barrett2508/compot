@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instant Win – Compot</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">Compot</a>
+
+  <div class="nav-right">
+    <div class="balance-pill">£125.00</div>
+    <a href="account.html" class="account-link">Account</a>
+  </div>
+</header>
+
+<main class="container">
+  <h2 class="section-title">Instant Win Games</h2>
+
+  <div class="grid">
+
+    <!-- Scratch -->
+    <section class="card game-card">
+      <div class="game-head">
+        <div>
+          <h3 class="game-title">Scratch Card</h3>
+          <p class="small-muted">Scratch to reveal. Win chance: <strong>1 in 10</strong> • Cost: <strong>£2</strong></p>
+        </div>
+        <button class="btn secondary" data-open-modal="addFundsModal" style="margin-top:0;">Add Funds</button>
+      </div>
+
+      <div class="scratch-wrap">
+        <div class="scratch-row" aria-label="scratch results">
+          <div class="scratch-slot" data-scratch-slot>❔</div>
+          <div class="scratch-slot" data-scratch-slot>❔</div>
+          <div class="scratch-slot" data-scratch-slot>❔</div>
+        </div>
+
+        <!-- Scratch overlay canvas -->
+        <canvas class="scratch-canvas" data-scratch-canvas></canvas>
+      </div>
+
+      <div class="game-actions">
+        <button class="btn" data-scratch-play>New Card (£2)</button>
+        <button class="btn secondary" data-scratch-reset>Reset</button>
+      </div>
+
+      <p class="game-result" data-scratch-result>Press “New Card” to start, then scratch to reveal.</p>
+    </section>
+
+    <!-- Pick a box -->
+    <section class="card game-card">
+      <div class="game-head">
+        <div>
+          <h3 class="game-title">Pick a Box</h3>
+          <p class="small-muted">Pick 1 of 9 boxes. Win chance: <strong>1 in 10</strong> • Cost: <strong>£1</strong></p>
+        </div>
+      </div>
+
+      <div class="box-grid" data-box-grid>
+        <button class="box" data-box="1">?</button>
+        <button class="box" data-box="2">?</button>
+        <button class="box" data-box="3">?</button>
+        <button class="box" data-box="4">?</button>
+        <button class="box" data-box="5">?</button>
+        <button class="box" data-box="6">?</button>
+        <button class="box" data-box="7">?</button>
+        <button class="box" data-box="8">?</button>
+        <button class="box" data-box="9">?</button>
+      </div>
+
+      <div class="game-actions">
+        <button class="btn secondary" data-box-reset>Play Again</button>
+      </div>
+
+      <p class="game-result" data-box-result>Pick a box to reveal your prize.</p>
+    </section>
+
+    <!-- Spin -->
+    <section class="card game-card">
+      <div class="game-head">
+        <div>
+          <h3 class="game-title">Spin the Wheel</h3>
+          <p class="small-muted">Spin for an instant prize. Win chance: <strong>1 in 10</strong> • Cost: <strong>£2</strong></p>
+        </div>
+      </div>
+
+      <div class="wheel-wrap">
+        <div class="wheel-pointer"></div>
+
+        <div class="wheel" data-wheel>
+          <span class="wheel-label" style="--i:0;">£0</span>
+          <span class="wheel-label" style="--i:1;">£2</span>
+          <span class="wheel-label" style="--i:2;">£5</span>
+          <span class="wheel-label" style="--i:3;">£10</span>
+          <span class="wheel-label" style="--i:4;">£15</span>
+          <span class="wheel-label" style="--i:5;">£25</span>
+          <span class="wheel-label" style="--i:6;">£50</span>
+          <span class="wheel-label" style="--i:7;">£100</span>
+
+          <div class="wheel-center">SPIN</div>
+        </div>
+      </div>
+
+      <div class="game-actions">
+        <button class="btn" data-wheel-spin>Spin (£2)</button>
+        <button class="btn secondary" data-wheel-reset>Reset</button>
+      </div>
+
+      <p class="game-result" data-wheel-result>Spin the wheel to win instantly.</p>
+    </section>
+
+  </div>
+
+  <div class="card" style="margin-top:1.6rem;">
+    <h3 style="margin-bottom:.6rem;">Tip</h3>
+    <p class="small-muted">
+      Your plays and wins are logged in <strong>Transactions</strong>. (Demo build using localStorage.)
+    </p>
+    <a class="btn secondary" style="margin-top:1rem; display:inline-block;" href="transactions.html">View Transactions</a>
+  </div>
+</main>
+
+<footer>© 2026 Compot</footer>
+
+<!-- Add Funds Modal -->
+<div class="modal-backdrop" id="addFundsModal">
+  <div class="modal card">
+    <h3>Add Funds</h3>
+    <p class="small-muted">Choose a quick top-up or enter a custom amount.</p>
+
+    <div class="row">
+      <button class="btn secondary" data-topup="10">+£10</button>
+      <button class="btn secondary" data-topup="25">+£25</button>
+      <button class="btn secondary" data-topup="50">+£50</button>
+    </div>
+
+    <label style="margin-top:1rem;">Custom amount</label>
+    <input type="number" min="1" step="1" placeholder="e.g. 15" data-topup-custom />
+
+    <div class="row">
+      <button class="btn" data-topup-custom-btn>Add</button>
+      <button class="btn secondary" data-close-modal="addFundsModal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

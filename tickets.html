@@ -1,0 +1,64 @@
+<!-- tickets.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Tickets – Compot</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="app.js"></script>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">Compot</a>
+  <div class="nav-right">
+    <div class="balance-pill">£125.00</div>
+    <a href="account.html" class="account-link">Account</a>
+  </div>
+</header>
+
+<main class="container">
+  <div class="card">
+    <h3 style="margin-bottom:1rem;">My Tickets</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Competition</th>
+          <th>Tickets</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody data-tickets-body>
+        <!-- Filled by app.js -->
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<footer>© 2026 Compot</footer>
+
+<!-- Add Funds Modal -->
+<div class="modal-backdrop" id="addFundsModal">
+  <div class="modal card">
+    <h3>Add Funds</h3>
+    <p class="small-muted">Choose a quick top-up or enter a custom amount.</p>
+
+    <div class="row">
+      <button class="btn secondary" data-topup="10">+£10</button>
+      <button class="btn secondary" data-topup="25">+£25</button>
+      <button class="btn secondary" data-topup="50">+£50</button>
+    </div>
+
+    <label style="margin-top:1rem;">Custom amount</label>
+    <input type="number" min="1" step="1" placeholder="e.g. 15" data-topup-custom />
+
+    <div class="row">
+      <button class="btn" data-topup-custom-btn>Add</button>
+      <button class="btn secondary" data-close-modal="addFundsModal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
